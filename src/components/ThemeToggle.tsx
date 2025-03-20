@@ -13,7 +13,6 @@ const ThemeToggle: React.FC = () => {
       <Switch 
         onChange={toggleTheme}
         checked={theme === 'dark'}
-        className="k-custom-switch"
         aria-label="Toggle dark mode"
       />
       <Moon className="h-5 w-5 text-foreground" />
