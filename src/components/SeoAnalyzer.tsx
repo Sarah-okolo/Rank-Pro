@@ -1,10 +1,8 @@
 
 import React from 'react';
-import { Form, Field, FormElement } from '@progress/kendo-react-form';
-import { Input } from '@progress/kendo-react-inputs';
 import { Button } from '@progress/kendo-react-buttons';
+import { Input } from '@progress/kendo-react-inputs';
 import { Link, Scan, BarChart4 } from 'lucide-react';
-import { useSeoAnalysis } from '@/hooks/useSeoAnalysis';
 import { Loader } from '@progress/kendo-react-indicators';
 
 interface AnalyzerProps {
@@ -15,8 +13,9 @@ interface AnalyzerProps {
 }
 
 const SeoAnalyzer: React.FC<AnalyzerProps> = ({ url, setUrl, onAnalyze, isAnalyzing }) => {
-  const handleSubmit = (dataItem: { url: string }) => {
-    onAnalyze(dataItem.url);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onAnalyze(url);
   };
 
   return (
@@ -37,47 +36,40 @@ const SeoAnalyzer: React.FC<AnalyzerProps> = ({ url, setUrl, onAnalyze, isAnalyz
 
       <div className="w-full max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.4s' }}>
         <div className="neo-blur rounded-xl p-8">
-          <Form
-            onSubmit={handleSubmit}
-            initialValues={{ url }}
-            render={(formRenderProps) => (
-              <FormElement>
-                <div className="mb-6">
-                  <Field
-                    id="url"
-                    name="url"
-                    component={Input}
-                    label="Website URL"
-                    placeholder="https://example.com"
-                    value={url}
-                    onChange={(e) => setUrl(e.value)}
-                    disabled={isAnalyzing}
-                    className="w-full k-input-md"
-                  />
-                </div>
-                <div className="flex justify-center">
-                  <Button
-                    type="submit"
-                    disabled={isAnalyzing}
-                    className="k-button k-button-md k-rounded-md bg-gradient-primary hover:opacity-90 text-white px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-70"
-                    style={{ border: 'none' }}
-                  >
-                    {isAnalyzing ? (
-                      <div className="flex items-center">
-                        <Loader size="small" type="pulsing" />
-                        <span className="ml-2">Analyzing...</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center">
-                        <Scan className="mr-2 h-5 w-5" />
-                        <span>Analyze Website</span>
-                      </div>
-                    )}
-                  </Button>
-                </div>
-              </FormElement>
-            )}
-          />
+          <form onSubmit={handleSubmit}>
+            <div className="mb-6">
+              <label htmlFor="url" className="block text-sm font-medium mb-2">Website URL</label>
+              <Input
+                id="url"
+                name="url"
+                placeholder="https://example.com"
+                value={url}
+                onChange={(e) => setUrl(e.value)}
+                disabled={isAnalyzing}
+                className="w-full p-3 border border-slate-300 dark:border-slate-700 rounded-md"
+              />
+            </div>
+            <div className="flex justify-center">
+              <Button
+                type="submit"
+                disabled={isAnalyzing}
+                className="k-button k-button-md k-rounded-md bg-gradient-primary hover:opacity-90 text-white px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-70"
+                style={{ border: 'none' }}
+              >
+                {isAnalyzing ? (
+                  <div className="flex items-center">
+                    <Loader size="small" type="pulsing" />
+                    <span className="ml-2">Analyzing...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <Scan className="mr-2 h-5 w-5" />
+                    <span>Analyze Website</span>
+                  </div>
+                )}
+              </Button>
+            </div>
+          </form>
         </div>
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center animate-fade-up" style={{ animationDelay: '0.6s' }}>

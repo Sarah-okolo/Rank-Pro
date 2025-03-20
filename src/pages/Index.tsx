@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useSeoAnalysis } from '@/hooks/useSeoAnalysis';
 import Header from '@/components/Header';
 import SeoAnalyzer from '@/components/SeoAnalyzer';
@@ -8,7 +8,6 @@ import OptimizationTips from '@/components/OptimizationTips';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { Loader } from '@progress/kendo-react-indicators';
-import '@progress/kendo-theme-default/dist/all.css';
 
 const Index: React.FC = () => {
   const {

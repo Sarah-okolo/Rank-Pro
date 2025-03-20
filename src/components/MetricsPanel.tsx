@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { TabStrip, TabStripTab } from '@progress/kendo-react-layout';
+import { Tabs, TabList, TabItem } from '@progress/kendo-react-layout';
 import { SeoMetrics } from '@/hooks/useSeoAnalysis';
 import { Chart, ChartSeries, ChartSeriesItem, ChartValueAxis, ChartValueAxisItem, ChartCategoryAxis, ChartCategoryAxisItem } from '@progress/kendo-react-charts';
 import { ProgressBar } from '@progress/kendo-react-progressbars';
-import { Grid, GridColumn } from '@progress/kendo-react-grid';
 import AnimatedCounter from './AnimatedCounter';
 import { AlertCircle, Clock, Activity, BarChart, FileCode, Smartphone } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import '@progress/kendo-theme-default/dist/all.css';
 
 interface MetricsPanelProps {
@@ -63,13 +63,18 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
         </div>
 
         <div className="neo-blur rounded-xl p-6 md:p-8 animate-fade-up" style={{ animationDelay: '0.3s' }}>
-          <TabStrip
+          <Tabs
             selected={activeTabId}
             onSelect={handleTabSelect}
             animation={true}
-            className="k-tabstrip-animated"
           >
-            <TabStripTab title="Overview">
+            <TabList>
+              <TabItem title="Overview" />
+              <TabItem title="Content Analysis" />
+              <TabItem title="Technical SEO" />
+            </TabList>
+            
+            {activeTabId === 0 && (
               <div className="p-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                   <div className="neo-blur rounded-lg p-6 text-center">
@@ -195,57 +200,54 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                   </div>
                 </div>
               </div>
-            </TabStripTab>
+            )}
             
-            <TabStripTab title="Content Analysis">
+            {activeTabId === 1 && (
               <div className="p-4">
                 <div className="neo-blur rounded-lg p-6 mb-8">
                   <h3 className="text-xl font-semibold mb-6">Content Metrics</h3>
                   <div className="grid gap-4">
-                    <Grid
-                      data={contentData}
-                      style={{ 
-                        border: 'none', 
-                        boxShadow: 'none',
-                        backgroundColor: 'transparent'
-                      }}
-                    >
-                      <GridColumn field="metric" title="Metric" width="200px" />
-                      <GridColumn field="value" title="Current Value" width="200px" />
-                      <GridColumn field="target" title="Target Value" width="200px" />
-                      <GridColumn 
-                        title="Status" 
-                        cell={({ dataItem }) => {
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                      <thead>
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Metric</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Current Value</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Target Value</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                        {contentData.map((item, index) => {
                           let status = 'warning';
                           let statusText = 'Needs Improvement';
                           
-                          if (dataItem.metric === 'Word Count') {
-                            if (dataItem.value >= 1000) {
+                          if (item.metric === 'Word Count') {
+                            if (item.value >= 1000) {
                               status = 'success';
                               statusText = 'Good';
                             }
-                          } else if (dataItem.metric === 'Title Length') {
-                            if (dataItem.value >= 50 && dataItem.value <= 60) {
+                          } else if (item.metric === 'Title Length') {
+                            if (item.value >= 50 && item.value <= 60) {
                               status = 'success';
                               statusText = 'Good';
                             }
-                          } else if (dataItem.metric === 'Meta Description') {
-                            if (dataItem.value >= 120 && dataItem.value <= 158) {
+                          } else if (item.metric === 'Meta Description') {
+                            if (item.value >= 120 && item.value <= 158) {
                               status = 'success';
                               statusText = 'Good';
                             }
-                          } else if (dataItem.metric === 'H1 Tags') {
-                            if (dataItem.value === 1) {
+                          } else if (item.metric === 'H1 Tags') {
+                            if (item.value === 1) {
                               status = 'success';
                               statusText = 'Good';
                             }
-                          } else if (dataItem.metric === 'Image Alt Tags') {
-                            if (dataItem.value === '100%') {
+                          } else if (item.metric === 'Image Alt Tags') {
+                            if (item.value === '100%') {
                               status = 'success';
                               statusText = 'Good';
                             }
-                          } else if (dataItem.metric === 'Broken Links') {
-                            if (dataItem.value === 0) {
+                          } else if (item.metric === 'Broken Links') {
+                            if (item.value === 0) {
                               status = 'success';
                               statusText = 'Good';
                             } else {
@@ -254,20 +256,25 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                             }
                           }
                           
-                          const colors = {
-                            success: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
-                            warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
-                            error: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
-                          };
-                          
+                          const badgeVariant = 
+                            status === 'success' ? 'default' :
+                            status === 'warning' ? 'secondary' : 'destructive';
+                            
                           return (
-                            <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[status as keyof typeof colors]}`}>
-                              {statusText}
-                            </div>
+                            <tr key={index}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm">{item.metric}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm">{item.value}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm">{item.target}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                <Badge variant={badgeVariant as any}>
+                                  {statusText}
+                                </Badge>
+                              </td>
+                            </tr>
                           );
-                        }}
-                      />
-                    </Grid>
+                        })}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
                 
@@ -307,9 +314,9 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                   </ul>
                 </div>
               </div>
-            </TabStripTab>
+            )}
             
-            <TabStripTab title="Technical SEO">
+            {activeTabId === 2 && (
               <div className="p-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <div className="neo-blur rounded-lg p-6">
@@ -365,47 +372,31 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <span>Broken Links</span>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          metrics.brokenLinks === 0 
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' 
-                            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
-                        }`}>
+                        <Badge variant={metrics.brokenLinks === 0 ? "default" : "destructive"}>
                           {metrics.brokenLinks} {metrics.brokenLinks === 1 ? 'issue' : 'issues'}
-                        </span>
+                        </Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Missing Meta Tags</span>
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
-                          0 issues
-                        </span>
+                        <Badge variant="default">0 issues</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>HTTP vs HTTPS</span>
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
-                          HTTPS Enabled
-                        </span>
+                        <Badge variant="default">HTTPS Enabled</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Mobile Responsiveness</span>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          metrics.mobileCompatibility >= 90 
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' 
-                            : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
-                        }`}>
+                        <Badge variant={metrics.mobileCompatibility >= 90 ? "default" : "secondary"}>
                           {metrics.mobileCompatibility >= 90 ? 'Responsive' : 'Needs Improvement'}
-                        </span>
+                        </Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>XML Sitemap</span>
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
-                          Present
-                        </span>
+                        <Badge variant="default">Present</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Robots.txt</span>
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
-                          Properly Configured
-                        </span>
+                        <Badge variant="default">Properly Configured</Badge>
                       </div>
                     </div>
                   </div>
@@ -469,8 +460,8 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                   </div>
                 </div>
               </div>
-            </TabStripTab>
-          </TabStrip>
+            )}
+          </Tabs>
         </div>
       </div>
     </section>
@@ -478,4 +469,3 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
 };
 
 export default MetricsPanel;
-
