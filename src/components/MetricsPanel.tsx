@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Tabs, TabList, TabItem } from '@progress/kendo-react-layout';
 import { SeoMetrics } from '@/hooks/useSeoAnalysis';
+import { TabStrip, TabStripTab } from '@progress/kendo-react-layout';
 import { Chart, ChartSeries, ChartSeriesItem, ChartValueAxis, ChartValueAxisItem, ChartCategoryAxis, ChartCategoryAxisItem } from '@progress/kendo-react-charts';
 import { ProgressBar } from '@progress/kendo-react-progressbars';
 import AnimatedCounter from './AnimatedCounter';
@@ -63,18 +63,12 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
         </div>
 
         <div className="neo-blur rounded-xl p-6 md:p-8 animate-fade-up" style={{ animationDelay: '0.3s' }}>
-          <Tabs
+          <TabStrip
             selected={activeTabId}
             onSelect={handleTabSelect}
             animation={true}
           >
-            <TabList>
-              <TabItem title="Overview" />
-              <TabItem title="Content Analysis" />
-              <TabItem title="Technical SEO" />
-            </TabList>
-            
-            {activeTabId === 0 && (
+            <TabStripTab title="Overview">
               <div className="p-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                   <div className="neo-blur rounded-lg p-6 text-center">
@@ -200,9 +194,9 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                   </div>
                 </div>
               </div>
-            )}
+            </TabStripTab>
             
-            {activeTabId === 1 && (
+            <TabStripTab title="Content Analysis">
               <div className="p-4">
                 <div className="neo-blur rounded-lg p-6 mb-8">
                   <h3 className="text-xl font-semibold mb-6">Content Metrics</h3>
@@ -222,17 +216,20 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                           let statusText = 'Needs Improvement';
                           
                           if (item.metric === 'Word Count') {
-                            if (item.value >= 1000) {
+                            const value = Number(item.value);
+                            if (value >= 1000) {
                               status = 'success';
                               statusText = 'Good';
                             }
                           } else if (item.metric === 'Title Length') {
-                            if (item.value >= 50 && item.value <= 60) {
+                            const value = Number(item.value);
+                            if (value >= 50 && value <= 60) {
                               status = 'success';
                               statusText = 'Good';
                             }
                           } else if (item.metric === 'Meta Description') {
-                            if (item.value >= 120 && item.value <= 158) {
+                            const value = Number(item.value);
+                            if (value >= 120 && value <= 158) {
                               status = 'success';
                               statusText = 'Good';
                             }
@@ -314,9 +311,9 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                   </ul>
                 </div>
               </div>
-            )}
+            </TabStripTab>
             
-            {activeTabId === 2 && (
+            <TabStripTab title="Technical SEO">
               <div className="p-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <div className="neo-blur rounded-lg p-6">
@@ -460,8 +457,8 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                   </div>
                 </div>
               </div>
-            )}
-          </Tabs>
+            </TabStripTab>
+          </TabStrip>
         </div>
       </div>
     </section>
