@@ -41,11 +41,15 @@ const Header: React.FC = () => {
       <div className="flex items-center">
         <ThemeToggle />
         <Button
-          icon={mobileMenuOpen ? X : Menu}
-          fillMode="flat"
           className="md:hidden ml-2"
           onClick={toggleMobileMenu}
-        />
+          fillMode="flat"
+        >
+          {mobileMenuOpen ? 
+            <X className="h-5 w-5" /> : 
+            <Menu className="h-5 w-5" />
+          }
+        </Button>
       </div>
 
       {/* Mobile menu */}
