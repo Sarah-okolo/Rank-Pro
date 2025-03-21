@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import ThemeToggle from './ThemeToggle';
 import { Anchor, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Button } from '@progress/kendo-react-buttons';
+import { Button } from '@/components/ui/button';
 
 const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,11 +41,13 @@ const Header: React.FC = () => {
       <div className="flex items-center">
         <ThemeToggle />
         <Button
-          icon={mobileMenuOpen ? X : Menu}
-          fillMode="flat"
+          variant="ghost"
+          size="icon"
           className="md:hidden ml-2"
           onClick={toggleMobileMenu}
-        />
+        >
+          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </Button>
       </div>
 
       {/* Mobile menu */}

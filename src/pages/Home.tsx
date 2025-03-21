@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { Link } from 'react-router-dom';
 import { Anchor, BarChart2, Lightbulb, TrendingUp, Activity, CheckCircle } from 'lucide-react';
-import { Button } from '@progress/kendo-react-buttons';
+import { Button } from '@/components/ui/button';
 import { PanelBar, PanelBarItem } from '@progress/kendo-react-layout';
 import { Card, CardTitle, CardBody, CardActions } from '@progress/kendo-react-layout';
 
@@ -209,9 +209,8 @@ const Home: React.FC = () => {
                     </CardBody>
                     <CardActions className="p-6 pt-0">
                       <Button
-                        themeColor={tier.recommended ? "primary" : "none"}
-                        fillMode={tier.recommended ? "solid" : "outline"}
                         className="w-full"
+                        variant={tier.recommended ? "default" : "outline"}
                       >
                         Get Started
                       </Button>
@@ -221,7 +220,7 @@ const Home: React.FC = () => {
               </div>
             </div>
 
-            {/* Premium Kendo React TileLayout would go here, but replaced with Card-based tips section */}
+            {/* Expert SEO Tips Section */}
             <div className="mt-16 animate-fade-up" style={{ animationDelay: '0.8s' }}>
               <h2 className="text-2xl font-bold mb-6 text-center">Expert SEO Tips</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -231,12 +230,12 @@ const Home: React.FC = () => {
                       {tip.category === 'Performance' && <TrendingUp className="h-6 w-6 text-primary mr-2" />}
                       {tip.category === 'Content' && <Lightbulb className="h-6 w-6 text-primary mr-2" />}
                       {tip.category === 'Technical' && <Activity className="h-6 w-6 text-primary mr-2" />}
-                      <span className="text-sm font-medium text-seo-teal">{tip.category}</span>
+                      <span className="text-sm font-medium text-primary">{tip.category}</span>
                     </div>
                     <h3 className="text-xl font-semibold mb-2">{tip.title}</h3>
                     <p className="text-muted-foreground">{tip.description}</p>
                     <Button
-                      look="flat"
+                      variant="ghost"
                       className="mt-4 text-primary hover:text-primary/80"
                     >
                       Learn More
