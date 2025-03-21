@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,16 +13,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 280 5% 13%;
 
-    --primary: 322 100% 50%;
+    --primary: 180 100% 35%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 36 100% 80%;
+    --secondary: 190 100% 80%;
     --secondary-foreground: 280 5% 13%;
 
     --muted: 280 5% 96%;
     --muted-foreground: 280 5% 45%;
 
-    --accent: 310 30% 90%;
+    --accent: 185 30% 90%;
     --accent-foreground: 280 5% 13%;
 
     --destructive: 0 84.2% 60.2%;
@@ -31,7 +30,7 @@
 
     --border: 280 5% 90%;
     --input: 280 5% 90%;
-    --ring: 322 100% 50%;
+    --ring: 180 100% 35%;
 
     --radius: 1rem;
 
@@ -55,16 +54,16 @@
     --popover: 280 10% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 322 100% 50%;
+    --primary: 180 100% 35%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 36 100% 50%;
+    --secondary: 190 100% 50%;
     --secondary-foreground: 280 5% 13%;
 
     --muted: 280 5% 20%;
     --muted-foreground: 280 5% 65%;
 
-    --accent: 310 30% 25%;
+    --accent: 185 30% 25%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -72,7 +71,7 @@
 
     --border: 280 5% 20%;
     --input: 280 5% 20%;
-    --ring: 322 100% 50%;
+    --ring: 180 100% 35%;
   }
 
   * {

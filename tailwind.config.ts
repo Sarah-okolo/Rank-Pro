@@ -59,12 +59,12 @@ export default {
         },
         // Custom colors
         seo: {
-          purple: "#9b87f5",
-          pink: "#D946EF",
-          amber: "#FFA99F",
-          cream: "#FFDDE1",
-          peach: "#FFE29F",
-          coral: "#FF719A",
+          teal: "#1EAEDB",
+          lightBlue: "#33C3F0",
+          blue: "#0EA5E9",
+          ocean: "#0FA0CE",
+          cream: "#E6F7FF",
+          mint: "#B2F5EA",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -117,9 +117,9 @@ export default {
         "pulse-light": "pulse-light 3s ease-in-out infinite",
       },
       backgroundImage: {
-        "gradient-primary": "linear-gradient(225deg, #FFE29F 0%, #FFA99F 48%, #FF719A 100%)",
-        "gradient-secondary": "linear-gradient(90deg, hsla(341, 91%, 68%, 1) 0%, hsla(24, 100%, 83%, 1) 100%)",
-        "gradient-tertiary": "linear-gradient(90deg, hsla(277, 75%, 84%, 1) 0%, hsla(297, 50%, 51%, 1) 100%)",
+        "gradient-primary": "linear-gradient(225deg, #B2F5EA 0%, #33C3F0 48%, #0EA5E9 100%)",
+        "gradient-secondary": "linear-gradient(90deg, hsla(195, 83%, 58%, 1) 0%, hsla(185, 92%, 79%, 1) 100%)",
+        "gradient-tertiary": "linear-gradient(90deg, hsla(200, 75%, 84%, 1) 0%, hsla(187, 50%, 51%, 1) 100%)",
       },
     },
   },

@@ -31,7 +31,7 @@ const Analyzer: React.FC = () => {
           
           {metrics.status === 'loading' && (
             <div className="flex flex-col items-center justify-center min-h-[50vh] animate-fade-in">
-              <Loader size="large" type="pulsing" themeColor="primary" />
+              <Loader size="large" type="pulsing" themeColor="info" />
               <p className="mt-6 text-xl font-medium">Analyzing your website...</p>
               <p className="text-muted-foreground mt-2">This may take a few moments</p>
             </div>

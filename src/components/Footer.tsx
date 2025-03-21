@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Search, ArrowUp } from 'lucide-react';
+import { Anchor, ArrowUp } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const scrollToTop = () => {
@@ -16,9 +16,9 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           <div className="md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
-              <Search className="h-6 w-6 text-primary" />
+              <Anchor className="h-6 w-6 text-primary" />
               <h3 className="text-xl font-semibold bg-gradient-primary bg-clip-text text-transparent">
-                SEO Optimizer Haven
+                OceanRank Pro
               </h3>
             </div>
             <p className="text-muted-foreground max-w-md mb-4">
@@ -71,7 +71,7 @@ const Footer: React.FC = () => {
         
         <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-border/30">
           <p className="text-sm text-muted-foreground mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} SEO Optimizer Haven. All rights reserved.
+            &copy; {new Date().getFullYear()} OceanRank Pro. All rights reserved.
           </p>
           <button 
             onClick={scrollToTop}

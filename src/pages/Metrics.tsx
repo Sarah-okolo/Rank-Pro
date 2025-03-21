@@ -37,7 +37,7 @@ const Metrics: React.FC = () => {
                   You need to analyze a website first to see the metrics. Please go to the Analyzer page to start.
                 </p>
                 <Button
-                  primary={true}
+                  themeColor="primary"
                   onClick={() => navigate('/analyzer')}
                   className="px-6 py-3"
                 >
