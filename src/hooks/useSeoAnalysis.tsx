@@ -136,7 +136,6 @@ export const useSeoAnalysis = () => {
       const API_KEY = import.meta.env.VITE_GPSI_AUTHKEY;
       const Gres = await axios.get(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&category=performance&category=accessibility&category=seo&category=best-practices&key=${API_KEY}`)
 
-      console.log(Gres.data.lighthouseResult);
       const data = Gres.data.lighthouseResult;
 
       // SEO metrics
@@ -178,7 +177,7 @@ export const useSeoAnalysis = () => {
           messages: [
             {
               role: 'user',
-              content: `Based on the following metrics, ${metricsString}, in a numbered list(e.g 1. 2. 3.), provide tips to improve this website's SEO`
+              content: `Based on the following metrics, ${metricsString}, in a numbered list containing a title and the details only separated by a colon (e.g. 1. Improve page speed: The current page speed...), provide tips to improve this website's SEO`
             }
           ],
           web_access: true
@@ -186,9 +185,7 @@ export const useSeoAnalysis = () => {
       };
 
       const response = await axios.request(OpenApioptions);
-      setAiTips(response.data.result);
-      console.log(response.data.result);
-    
+      setAiTips(response.data.result);    
       
       // Filter optimization tips based on metrics
       const filteredTips = OptimizationTips.filter(tip => {

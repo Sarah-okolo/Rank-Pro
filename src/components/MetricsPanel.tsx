@@ -11,6 +11,7 @@ import { anchorIcon } from '@progress/kendo-svg-icons';
 import { Button } from '@progress/kendo-react-buttons';
 import { Badge } from '@/components/ui/badge';
 import '@progress/kendo-theme-default/dist/all.css';
+import { it } from 'node:test';
 
 
 interface MetricsPanelProps {
@@ -234,16 +235,8 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                         {contentData.map((item, index) => {
                           let status = 'warning';
                           let statusText = 'Needs Improvement';
-                          
-                          if (item.metric === 'Word Count') {
-                            const value = Number(item.value);
-                            if (value >= 1000) {
-                              status = 'success';
-                              statusText = 'Good';
-                            }
-                          } else if (item.metric === 'Title Length') {
-                            const value = Number(item.value);
-                            if (value >= 50 && value <= 60) {
+                        if (item.metric === 'Title') {
+                            if (item.value === item.target) {
                               status = 'success';
                               statusText = 'Good';
                             }

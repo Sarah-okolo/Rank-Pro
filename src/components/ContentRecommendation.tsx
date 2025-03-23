@@ -22,7 +22,6 @@ function ContentRecommendation() {
           details: parts[1]?.replace(/\(Source:\s\[\d+\]\)/g, "").trim() || "" // Extract details & remove (Source: [x])
         };
       });
-      console.log(seoTips);
       setSeoTips(seoTips);
     }
   }, [aiTips]);
