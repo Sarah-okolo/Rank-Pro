@@ -1,6 +1,25 @@
-
 import React from 'react';
 import { Anchor, ArrowUp } from 'lucide-react';
+import { FloatingActionButton } from '@progress/kendo-react-buttons';
+import {
+  clipboardIcon,
+  clipboardTextIcon,
+  clipboardHtmlIcon,
+  clipboardMarkdownIcon,
+  boldIcon,
+  italicIcon,
+  underlineIcon,
+  cutIcon,
+  copyIcon,
+  alignLeftIcon,
+  alignRightIcon,
+  alignCenterIcon,
+  alignJustifyIcon,
+  checkIcon,
+  arrowUpIcon,
+  anchorIcon,
+  userIcon
+} from '@progress/kendo-svg-icons';
 
 const Footer: React.FC = () => {
   const scrollToTop = () => {
@@ -11,18 +30,18 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="neo-blur border-t border-border/50 py-12 px-6">
+    <footer className="neo-blur border-t border-border/50 py-12 px-6 mt-28">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12 items-center">
           <div className="md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <Anchor className="h-6 w-6 text-primary" />
               <h3 className="text-xl font-semibold bg-gradient-primary bg-clip-text text-transparent">
-                OceanRank Pro
+                Rank Pro
               </h3>
             </div>
             <p className="text-muted-foreground max-w-md mb-4">
-              Powerful SEO analysis and optimization tools to improve your website's visibility and ranking in search engines.
+              SEO analysis and optimization tool to improve your website's visibility and ranking in search engines.
             </p>
           </div>
           
@@ -47,40 +66,19 @@ const Footer: React.FC = () => {
             </ul>
           </div>
           
-          <div>
-            <h4 className="text-lg font-medium mb-4">Resources</h4>
-            <ul className="space-y-2">
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  SEO Guide
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  FAQ
-                </a>
-              </li>
-            </ul>
-          </div>
         </div>
         
         <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-border/30">
           <p className="text-sm text-muted-foreground mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} OceanRank Pro. All rights reserved.
+            &copy; {new Date().getFullYear()} Rank Pro. All rights reserved.
           </p>
-          <button 
+          <FloatingActionButton 
+            svgIcon={arrowUpIcon} 
+            text="Back to top" 
             onClick={scrollToTop}
-            className="flex items-center space-x-2 text-sm text-muted-foreground hover:text-primary transition-colors"
             aria-label="Scroll to top"
           >
-            <span>Back to top</span>
-            <ArrowUp className="h-4 w-4" />
-          </button>
+          </FloatingActionButton>
         </div>
       </div>
     </footer>

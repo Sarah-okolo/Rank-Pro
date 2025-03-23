@@ -6,8 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Analyzer from "./pages/Analyzer";
-import Metrics from "./pages/Metrics";
-import Tips from "./pages/Tips";
 import NotFound from "./pages/NotFound";
 
 // Create a client for React Query
@@ -22,8 +20,6 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/analyzer" element={<Analyzer />} />
-          <Route path="/metrics" element={<Metrics />} />
-          <Route path="/tips" element={<Tips />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

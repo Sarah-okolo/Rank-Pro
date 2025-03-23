@@ -5,9 +5,13 @@ import { TabStrip, TabStripTab } from '@progress/kendo-react-layout';
 import { Chart, ChartSeries, ChartSeriesItem, ChartValueAxis, ChartValueAxisItem, ChartCategoryAxis, ChartCategoryAxisItem } from '@progress/kendo-react-charts';
 import { ProgressBar } from '@progress/kendo-react-progressbars';
 import AnimatedCounter from './AnimatedCounter';
-import { AlertCircle, Clock, Activity, BarChart, FileCode, Smartphone } from 'lucide-react';
+import { Clock, Activity, BarChart, Smartphone } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { anchorIcon } from '@progress/kendo-svg-icons';
+import { Button } from '@progress/kendo-react-buttons';
 import { Badge } from '@/components/ui/badge';
 import '@progress/kendo-theme-default/dist/all.css';
+
 
 interface MetricsPanelProps {
   metrics: SeoMetrics;
@@ -33,9 +37,8 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
   ];
 
   const contentData = [
-    { metric: 'Word Count', value: metrics.wordCount, target: '1000+' },
-    { metric: 'Title Length', value: metrics.titleLength, target: '50-60' },
-    { metric: 'Meta Description', value: metrics.metaDescriptionLength, target: '120-158' },
+    { metric: 'Title', value: metrics.hasTitle, target: 'Valid' },
+    { metric: 'Meta Description', value: metrics.metaDescriptionLength, target: '1' },
     { metric: 'H1 Tags', value: metrics.h1Count, target: '1' },
     { metric: 'Image Alt Tags', value: `${metrics.imageAltTags}%`, target: '100%' },
     { metric: 'Broken Links', value: metrics.brokenLinks, target: '0' },
@@ -47,8 +50,25 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
     return '#ef4444'; // red
   };
 
+  const showTips = () => {
+    const tipsBlock = document.getElementById('optimization');
+    tipsBlock.style.display='block';
+    tipsBlock.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+  };
+
+  function getPageSpeedPercentage(pageSpeed: any) {
+    return Math.max(0, Math.min(100, 100 - (pageSpeed * 10)));
+  }
+
   return (
-    <section id="metrics" className="min-h-screen px-6 py-16 mt-6">
+    <section id="metrics" className="min-h-screen px-6 pb-16 pt-14 mt-6">
+      <div className="flex flex-wrap justify-end gap-4 mb-14 animate-fade-up">
+        <Link to="/analyzer">
+          <Button  className="inline-flex items-center px-6 py-3 rounded-lg bg-orange-500 text-black hover:bg-orange-500/80 transition-colors" svgIcon={anchorIcon} onClick={showTips}>
+            Get optimization tips
+          </Button>
+        </Link>
+      </div>
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12 animate-fade-up">
           <span className="inline-block text-xs bg-gradient-tertiary text-white px-3 py-1 rounded-full mb-4">
@@ -60,7 +80,7 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Below are the detailed metrics of your website's SEO performance. Use these insights to make targeted improvements.
           </p>
-        </div>
+        </div> 
 
         <div className="neo-blur rounded-xl p-6 md:p-8 animate-fade-up" style={{ animationDelay: '0.3s' }}>
           <TabStrip
@@ -102,10 +122,10 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                     <h3 className="text-lg font-medium mb-2">Page Speed</h3>
                     <div className="relative pt-1">
                       <ProgressBar 
-                        value={(6 - metrics.pageSpeed) * 20} // Convert 2-6s to 80%-0% 
+                        value={getPageSpeedPercentage(metrics.pageSpeed)} 
                         style={{ height: "8px" }}
                         progressStyle={{ 
-                          backgroundColor: getColorForScore((6 - metrics.pageSpeed) * 20),
+                          backgroundColor: getColorForScore(getPageSpeedPercentage(metrics.pageSpeed)),
                           transition: "width 1s ease-in-out"
                         }}
                       />
@@ -183,7 +203,7 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                         <ChartSeriesItem 
                           type="column" 
                           data={overviewData.map(item => item.value)}
-                          color={overviewData.map(item => getColorForScore(item.value))}
+                          // color={overviewData.map(item => getColorForScore(item.value))}
                           labels={{
                             visible: true,
                             content: (e) => `${e.value}%`
@@ -263,6 +283,7 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                               <td className="px-6 py-4 whitespace-nowrap text-sm">{item.value}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm">{item.target}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm">
+                              
                                 <Badge variant={badgeVariant as any}>
                                   {statusText}
                                 </Badge>
@@ -273,42 +294,6 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                       </tbody>
                     </table>
                   </div>
-                </div>
-                
-                <div className="neo-blur rounded-lg p-6">
-                  <div className="flex items-center mb-6">
-                    <AlertCircle className="h-6 w-6 text-yellow-500 mr-3" />
-                    <h3 className="text-xl font-semibold">Content Recommendations</h3>
-                  </div>
-                  <ul className="space-y-4">
-                    <li className="flex space-x-3">
-                      <div className="flex-shrink-0 rounded-full p-1 bg-green-100 text-green-500 dark:bg-green-900">
-                        <FileCode className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="font-medium">Improve keyword density</p>
-                        <p className="text-muted-foreground text-sm">Ensure your main keywords appear in your content at a natural frequency (1-2%).</p>
-                      </div>
-                    </li>
-                    <li className="flex space-x-3">
-                      <div className="flex-shrink-0 rounded-full p-1 bg-green-100 text-green-500 dark:bg-green-900">
-                        <FileCode className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="font-medium">Add more headings</p>
-                        <p className="text-muted-foreground text-sm">Break up your content with H2 and H3 headings to improve readability and SEO.</p>
-                      </div>
-                    </li>
-                    <li className="flex space-x-3">
-                      <div className="flex-shrink-0 rounded-full p-1 bg-green-100 text-green-500 dark:bg-green-900">
-                        <FileCode className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="font-medium">Optimize image alt text</p>
-                        <p className="text-muted-foreground text-sm">Add descriptive, keyword-rich alt text to all images.</p>
-                      </div>
-                    </li>
-                  </ul>
                 </div>
               </div>
             </TabStripTab>
@@ -325,10 +310,10 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                           <span className="text-sm font-medium">{metrics.pageSpeed}s</span>
                         </div>
                         <ProgressBar 
-                          value={(6 - metrics.pageSpeed) * 20} 
+                          value={getPageSpeedPercentage(metrics.pageSpeed)} 
                           style={{ height: "8px" }}
                           progressStyle={{ 
-                            backgroundColor: getColorForScore((6 - metrics.pageSpeed) * 20),
+                            backgroundColor: getColorForScore(getPageSpeedPercentage(metrics.pageSpeed)),
                             transition: "width 1s ease-in-out"
                           }}
                         />
@@ -379,7 +364,12 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                       </div>
                       <div className="flex items-center justify-between">
                         <span>HTTP vs HTTPS</span>
-                        <Badge variant="default">HTTPS Enabled</Badge>
+                        {metrics.security ? (
+                            <Badge variant="default">HTTPS Enabled</Badge>
+                          ) : (
+                            <Badge variant="destructive">HTTP Enabled</Badge>
+                          )
+                        }
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Mobile Responsiveness</span>
@@ -388,12 +378,22 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                         </Badge>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span>XML Sitemap</span>
-                        <Badge variant="default">Present</Badge>
+                        <span>Content Security Policy</span>
+                        { metrics.contentSecurityPolicy ? (
+                            <Badge variant="default">Present</Badge>
+                          ) : (
+                            <Badge variant="destructive">Absent</Badge>
+                          )
+                        }
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Robots.txt</span>
-                        <Badge variant="default">Properly Configured</Badge>
+                        { metrics.robots ? (
+                            <Badge variant="default">Properly Configured</Badge>
+                          ) : (
+                            <Badge variant="destructive">Not Found</Badge>
+                          )
+                        }
                       </div>
                     </div>
                   </div>
@@ -419,11 +419,19 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                         </li>
                         <li className="flex justify-between">
                           <span>Proper Heading Structure</span>
-                          <span className="text-yellow-500">⚠</span>
+                          {metrics.h1Count === 1 ? (
+                            <span className="text-green-500">✓</span>
+                          ) : (
+                            <span className="text-yellow-500">⚠</span>
+                          )}
                         </li>
                         <li className="flex justify-between">
                           <span>Image Alt Tags</span>
-                          <span className="text-yellow-500">⚠</span>
+                          {metrics.imageAltTags >= 90 ? (
+                            <span className="text-green-500">✓</span>
+                          ) : (
+                            <span className="text-yellow-500">⚠</span>
+                          )}
                         </li>
                       </ul>
                     </div>
@@ -432,7 +440,11 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                       <ul className="space-y-2 text-sm">
                         <li className="flex justify-between">
                           <span>Mobile Friendly</span>
-                          <span className="text-green-500">✓</span>
+                          {metrics.mobileCompatibility >= 90 ? (
+                            <span className="text-green-500">✓</span>
+                          ) : (
+                            <span className="text-yellow-500">⚠</span>
+                          )}
                         </li>
                         <li className="flex justify-between">
                           <span>Page Speed</span>
@@ -442,15 +454,27 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({ metrics, activeTabId, setAc
                         </li>
                         <li className="flex justify-between">
                           <span>HTTPS</span>
-                          <span className="text-green-500">✓</span>
+                          {metrics.security ? (
+                            <span className="text-green-500">✓</span>
+                          ) : (
+                            <span className="text-yellow-500">⚠</span>
+                          )}
                         </li>
                         <li className="flex justify-between">
-                          <span>Schema Markup</span>
-                          <span className="text-yellow-500">⚠</span>
+                          <span>Performance</span>
+                          {metrics.performance >= 90 ? (
+                            <span className="text-green-500">✓</span>
+                          ) : (
+                            <span className="text-yellow-500">⚠</span>
+                          )}
                         </li>
                         <li className="flex justify-between">
-                          <span>No Duplicate Content</span>
-                          <span className="text-green-500">✓</span>
+                          <span>Accessibility</span>
+                          {metrics.accessibility >= 90 ? (
+                            <span className="text-green-500">✓</span>
+                          ) : (
+                            <span className="text-yellow-500">⚠</span>
+                          )}
                         </li>
                       </ul>
                     </div>

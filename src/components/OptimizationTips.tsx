@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Card, CardBody, CardTitle } from '@progress/kendo-react-layout';
 import { PanelBar, PanelBarItem } from '@progress/kendo-react-layout';
 import { ProgressBar } from '@progress/kendo-react-progressbars';
 import { OptimizationTip } from '@/hooks/useSeoAnalysis';
 import { ArrowUp, Zap, FileCog, Wifi, FileEdit, ListChecks, ArrowUpRight } from 'lucide-react';
+import ContentRecommendation from './ContentRecommendation';
 
 interface OptimizationTipsProps {
   tips: OptimizationTip[];
@@ -68,48 +68,49 @@ const OptimizationTips: React.FC<OptimizationTipsProps> = ({ tips }) => {
           </p>
         </div>
 
-        <div className="mb-8 neo-blur rounded-xl p-6 md:p-8 animate-fade-up" style={{ animationDelay: '0.3s' }}>
-          <Card className="bg-transparent border-0 shadow-none">
-            <CardTitle className="text-xl font-semibold mb-6">High Priority Actions</CardTitle>
+          <Card className="bg-transparent border-0 shadow-none mb-8 neo-blur rounded-xl p-6 md:p-8 animate-fade-up" style={{ animationDelay: '0.3s' }}>
+            <CardTitle className="text-xl font-semibold mb-6 brightness-200">High Priority Actions</CardTitle>
             <CardBody>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {tips
                   .filter(tip => tip.priority === 'high')
                   .map((tip, index) => (
-                    <div key={index} className="neo-blur rounded-lg p-6 flex flex-col h-full">
+                    <Card key={index} className="neo-blur rounded-lg p-6 flex flex-col h-full">
                       <div className="flex items-center mb-4">
-                        <div className="rounded-full p-2 bg-primary/10 mr-3">
+                        <div className="rounded-full p-2 bg-primary/90 mr-3">
                           {getCategoryIcon(tip.category)}
                         </div>
                         <span className={`text-xs font-medium uppercase px-2 py-0.5 rounded-full ${getPriorityColor(tip.priority)}`}>
                           {tip.priority}
                         </span>
                       </div>
-                      <h3 className="text-lg font-medium mb-2">{tip.title}</h3>
-                      <p className="text-muted-foreground text-sm mb-4 flex-grow">{tip.description}</p>
-                      <div>
-                        <div className="flex justify-between text-xs mb-1">
-                          <span>Impact</span>
-                          <span>{tip.impact}%</span>
+                      <CardTitle className="text-lg font-medium mb-2 brightness-200">{tip.title}</CardTitle>
+                      <CardBody>
+                        <p className="text-muted-foreground text-sm mb-4 flex-grow">{tip.description}</p>
+                        <div>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span>Impact</span>
+                            <span>{tip.impact}%</span>
+                          </div>
+                          <ProgressBar 
+                            value={tip.impact} 
+                            style={{ height: "6px" }}
+                            progressStyle={{ 
+                              backgroundColor: getImpactBarColor(tip.impact),
+                              transition: "width 1s ease-in-out"
+                            }}
+                          />
                         </div>
-                        <ProgressBar 
-                          value={tip.impact} 
-                          style={{ height: "6px" }}
-                          progressStyle={{ 
-                            backgroundColor: getImpactBarColor(tip.impact),
-                            transition: "width 1s ease-in-out"
-                          }}
-                        />
-                      </div>
-                    </div>
+                      </CardBody>
+                    </Card>
                   ))}
               </div>
             </CardBody>
           </Card>
-        </div>
 
-        <div className="neo-blur rounded-xl p-6 md:p-8 animate-fade-up" style={{ animationDelay: '0.4s' }}>
-          <h3 className="text-xl font-semibold mb-6">All Recommendations by Category</h3>
+        <Card className="neo-blur rounded-xl p-6 md:p-8 animate-fade-up" style={{ animationDelay: '0.4s' }}>
+          <CardTitle className="text-xl font-semibold mb-6 brightness-200">All Recommendations by Category</CardTitle>
+          <CardBody>
           <PanelBar>
             {Object.entries(tipsByCategory).map(([category, categoryTips], index) => (
               <PanelBarItem 
@@ -160,34 +161,17 @@ const OptimizationTips: React.FC<OptimizationTipsProps> = ({ tips }) => {
           <div className="mt-8 p-6 neo-blur rounded-lg">
             <div className="flex items-center mb-4">
               <Zap className="h-6 w-6 text-primary mr-3" />
-              <h3 className="text-xl font-semibold">Want to go further?</h3>
+              <h3 className="text-xl font-semibold text-accent-foreground">Want to go further?</h3>
             </div>
             <p className="mb-4 text-muted-foreground">
               Implementing these recommendations will significantly improve your website's SEO performance. 
               For more advanced strategies and personalized guidance, consider:
             </p>
-            <ul className="space-y-2 mb-6">
-              <li className="flex items-start">
-                <div className="rounded-full p-1 bg-primary/10 mr-3 mt-0.5">
-                  <ArrowUp className="h-4 w-4 text-primary" />
-                </div>
-                <span>Conducting a comprehensive content audit</span>
-              </li>
-              <li className="flex items-start">
-                <div className="rounded-full p-1 bg-primary/10 mr-3 mt-0.5">
-                  <ArrowUp className="h-4 w-4 text-primary" />
-                </div>
-                <span>Implementing advanced schema markup</span>
-              </li>
-              <li className="flex items-start">
-                <div className="rounded-full p-1 bg-primary/10 mr-3 mt-0.5">
-                  <ArrowUp className="h-4 w-4 text-primary" />
-                </div>
-                <span>Developing a strategic backlink acquisition plan</span>
-              </li>
-            </ul>
+            
+            <ContentRecommendation />
           </div>
-        </div>
+          </CardBody>
+        </Card>
       </div>
     </section>
   );

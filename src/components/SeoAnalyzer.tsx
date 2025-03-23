@@ -2,8 +2,10 @@
 import React from 'react';
 import { Button } from '@progress/kendo-react-buttons';
 import { Input } from '@progress/kendo-react-inputs';
-import { Link, Scan, BarChart4 } from 'lucide-react';
+import { Scan } from 'lucide-react';
 import { Loader } from '@progress/kendo-react-indicators';
+import { FloatingLabel} from '@progress/kendo-react-labels';
+
 
 interface AnalyzerProps {
   url: string;
@@ -13,10 +15,12 @@ interface AnalyzerProps {
 }
 
 const SeoAnalyzer: React.FC<AnalyzerProps> = ({ url, setUrl, onAnalyze, isAnalyzing }) => {
-  const handleSubmit = (e: React.FormEvent) => {
+ 
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     onAnalyze(url);
   };
+
 
   return (
     <section id="analyzer" className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-12 md:py-20">
@@ -24,30 +28,24 @@ const SeoAnalyzer: React.FC<AnalyzerProps> = ({ url, setUrl, onAnalyze, isAnalyz
         <span className="inline-block text-xs bg-gradient-primary text-white px-3 py-1 rounded-full mb-4">
           Boost Your Website Visibility
         </span>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-          <span className="bg-gradient-primary bg-clip-text text-transparent">Optimize Your SEO</span>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight grid gap-0">
+          <span className="bg-gradient-primary bg-clip-text text-transparent">Analyze Your Website</span>
           <br />
-          <span>For Maximum Impact</span>
+          <span className='text-3xl md:text-4xl lg:text-5xl relative bottom-6'>For Detailed Insights</span>
         </h1>
         <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto">
-          Enter your website URL below to get a comprehensive SEO analysis with actionable tips to improve your site's visibility.
+          Enter a website URL below to get a comprehensive analysis on the website's SEO performance.
         </p>
       </div>
 
       <div className="w-full max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.4s' }}>
-        <div className="neo-blur rounded-xl p-8">
+        <div className="neo-blur rounded-xl p-8 md:px-20">
           <form onSubmit={handleSubmit}>
             <div className="mb-6">
-              <label htmlFor="url" className="block text-sm font-medium mb-2">Website URL</label>
-              <Input
-                id="url"
-                name="url"
-                placeholder="https://example.com"
-                value={url}
-                onChange={(e) => setUrl(e.value)}
-                disabled={isAnalyzing}
-                className="w-full p-3 border border-slate-300 dark:border-slate-700 rounded-md"
-              />
+              <FloatingLabel label={'Website URL'} editorId='url' editorValue={url} className='w-full text-[#0EA5E9] font-semibold scale-110'>
+                <Input id='url' name="url" value={url} onChange={(e) => setUrl(e.value)} disabled={isAnalyzing}
+                className="w-full h-12 border text-sm border-slate-300 dark:border-slate-700" placeholder="https://example.com"/>
+              </FloatingLabel>
             </div>
             <div className="flex justify-center">
               <Button
@@ -58,7 +56,7 @@ const SeoAnalyzer: React.FC<AnalyzerProps> = ({ url, setUrl, onAnalyze, isAnalyz
               >
                 {isAnalyzing ? (
                   <div className="flex items-center">
-                    <Loader size="small" type="pulsing" />
+                    <Loader size="medium" type="pulsing" />
                     <span className="ml-2">Analyzing...</span>
                   </div>
                 ) : (
@@ -70,32 +68,6 @@ const SeoAnalyzer: React.FC<AnalyzerProps> = ({ url, setUrl, onAnalyze, isAnalyz
               </Button>
             </div>
           </form>
-        </div>
-
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center animate-fade-up" style={{ animationDelay: '0.6s' }}>
-          <div className="neo-blur p-6 rounded-lg">
-            <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mx-auto mb-4">
-              <Scan className="h-6 w-6 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Deep Analysis</h3>
-            <p className="text-muted-foreground text-sm">Comprehensive scanning of all your website SEO factors</p>
-          </div>
-          
-          <div className="neo-blur p-6 rounded-lg">
-            <div className="rounded-full bg-secondary/10 w-12 h-12 flex items-center justify-center mx-auto mb-4">
-              <BarChart4 className="h-6 w-6 text-secondary" />
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Detailed Metrics</h3>
-            <p className="text-muted-foreground text-sm">Get actionable metrics to understand your site's performance</p>
-          </div>
-          
-          <div className="neo-blur p-6 rounded-lg">
-            <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mx-auto mb-4">
-              <Link className="h-6 w-6 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Optimization Tips</h3>
-            <p className="text-muted-foreground text-sm">Receive tailored recommendations to boost your rankings</p>
-          </div>
         </div>
       </div>
     </section>

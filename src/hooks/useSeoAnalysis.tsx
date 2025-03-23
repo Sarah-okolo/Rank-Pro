@@ -1,6 +1,9 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
+import axios from 'axios';
+import { useAiTips } from '@/store/AiTips';
+
 
 export interface SeoMetrics {
   performance: number;
@@ -9,12 +12,14 @@ export interface SeoMetrics {
   seo: number;
   pageSpeed: number;
   mobileCompatibility: number;
-  wordCount: number;
-  titleLength: number;
+  hasTitle: string;
   metaDescriptionLength: number;
   h1Count: number;
   imageAltTags: number;
   brokenLinks: number;
+  security: number;
+  robots: number;
+  contentSecurityPolicy: number;
   status: 'idle' | 'loading' | 'success' | 'error';
 }
 
@@ -33,29 +38,24 @@ const initialMetrics: SeoMetrics = {
   seo: 0,
   pageSpeed: 0,
   mobileCompatibility: 0,
-  wordCount: 0,
-  titleLength: 0,
+  hasTitle: 'Missing',
   metaDescriptionLength: 0,
   h1Count: 0,
   imageAltTags: 0,
   brokenLinks: 0,
+  security: 0,
+  robots: 0,
+  contentSecurityPolicy: 0,
   status: 'idle',
 };
 
-const mockOptimizationTips: OptimizationTip[] = [
+const OptimizationTips: OptimizationTip[] = [
   {
     category: 'Meta Tags',
     title: 'Optimize meta description',
     description: 'Your meta description should be between 120-158 characters and include your target keywords.',
     priority: 'high',
     impact: 85,
-  },
-  {
-    category: 'Content',
-    title: 'Add more content to your page',
-    description: 'Pages with 1000+ words tend to rank better in search results.',
-    priority: 'medium',
-    impact: 75,
   },
   {
     category: 'Performance',
@@ -108,6 +108,8 @@ export const useSeoAnalysis = () => {
   const [optimizationTips, setOptimizationTips] = useState<OptimizationTip[]>([]);
   const [activeTabId, setActiveTabId] = useState(0);
 
+  const setAiTips = useAiTips((state) => state.setAiTips);
+
   const isValidUrl = (url: string) => {
     try {
       new URL(url);
@@ -116,7 +118,10 @@ export const useSeoAnalysis = () => {
       return false;
     }
   };
+  
 
+
+// Function to analyze the website URL and fetch SEO metrics
   const analyzeWebsite = async (url: string) => {
     if (!isValidUrl(url)) {
       toast.error('Please enter a valid URL');
@@ -126,49 +131,86 @@ export const useSeoAnalysis = () => {
     setIsAnalyzing(true);
     setMetrics({ ...initialMetrics, status: 'loading' });
     
-    // Simulating API call with timeout
+    
     try {
-      await new Promise(resolve => setTimeout(resolve, 2500));
-      
-      // Mock data for demonstration purposes
-      const mockMetrics: SeoMetrics = {
-        performance: Math.floor(Math.random() * 40) + 60, // 60-100
-        accessibility: Math.floor(Math.random() * 30) + 70, // 70-100
-        bestPractices: Math.floor(Math.random() * 35) + 65, // 65-100
-        seo: Math.floor(Math.random() * 25) + 75, // 75-100
-        pageSpeed: Math.floor(Math.random() * 4) + 2, // 2-6 seconds
-        mobileCompatibility: Math.floor(Math.random() * 20) + 80, // 80-100
-        wordCount: Math.floor(Math.random() * 1500) + 500, // 500-2000
-        titleLength: Math.floor(Math.random() * 40) + 30, // 30-70
-        metaDescriptionLength: Math.floor(Math.random() * 80) + 80, // 80-160
-        h1Count: Math.floor(Math.random() * 3) + 1, // 1-4
-        imageAltTags: Math.floor(Math.random() * 60) + 40, // 40-100%
-        brokenLinks: Math.floor(Math.random() * 5), // 0-5
+      const API_KEY = import.meta.env.VITE_GPSI_AUTHKEY;
+      const Gres = await axios.get(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&category=performance&category=accessibility&category=seo&category=best-practices&key=${API_KEY}`)
+
+      console.log(Gres.data.lighthouseResult);
+      const data = Gres.data.lighthouseResult;
+
+      // SEO metrics
+      const Metrics: SeoMetrics = {
+        performance: Math.round(data?.categories?.performance?.score * 100) || 0, // 0-100 
+        accessibility: Math.round(data?.categories?.accessibility?.score * 100) || 0, // 0-100 
+        bestPractices: Math.round(data?.categories["best-practices"]?.score * 100) || 0, // 0-100 
+        seo: Math.round(data.categories.seo.score * 100) || 0, // 0-100
+        pageSpeed: parseFloat((data.audits["speed-index"].numericValue / 1000).toFixed(1)) || 0, // seconds
+        mobileCompatibility: data.audits.viewport.score * 100, // 80-100
+        hasTitle: data.audits["document-title"].score ? "Valid" : "Missing", 
+        metaDescriptionLength: (data.audits["meta-description"].score ? 1 : 0),
+        h1Count: Math.round(data.audits["heading-order"].score) || 0,
+        imageAltTags: Math.round(data.audits["image-alt"].score * 100) || 0, // 0-100
+        brokenLinks: data.audits["http-status-code"].numericValue === 200 ? 0 : 1,
+        security: data.audits["is-on-https"].score * 100 || 0, 
+        robots: data.audits["robots-txt"].score * 100 || 0,
+        contentSecurityPolicy: data.audits["csp-xss"].score * 100 || 0,
         status: 'success',
       };
       
-      setMetrics(mockMetrics);
+      setMetrics(Metrics);
+
+      // convert metrics object to string
+      const metricsString = Object.entries(Metrics)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(", ");
+
+      // Call OpenAI API to generate optimization tips based on gotten metrics
+      const OpenApioptions = {
+        method: 'POST',
+        url: 'https://open-ai21.p.rapidapi.com/conversationllama',
+        headers: {
+          'x-rapidapi-key': import.meta.env.VITE_OPENAI_APIKEY,
+          'x-rapidapi-host': 'open-ai21.p.rapidapi.com',
+          'Content-Type': 'application/json'
+        },
+        data: {
+          messages: [
+            {
+              role: 'user',
+              content: `Based on the following metrics, ${metricsString}, in a numbered list(e.g 1. 2. 3.), provide tips to improve this website's SEO`
+            }
+          ],
+          web_access: true
+        }
+      };
+
+      const response = await axios.request(OpenApioptions);
+      setAiTips(response.data.result);
+      console.log(response.data.result);
+    
       
       // Filter optimization tips based on metrics
-      const filteredTips = mockOptimizationTips.filter(tip => {
-        if (tip.category === 'Meta Tags' && mockMetrics.metaDescriptionLength < 120) return true;
-        if (tip.category === 'Content' && mockMetrics.wordCount < 1000) return true;
-        if (tip.category === 'Performance' && mockMetrics.pageSpeed > 3) return true;
-        if (tip.category === 'Links' && mockMetrics.brokenLinks > 0) return true;
-        if (tip.category === 'Mobile' && mockMetrics.mobileCompatibility < 90) return true;
-        if (tip.category === 'Structure' && mockMetrics.h1Count !== 1) return true;
-        if (tip.category === 'Technical') return Math.random() > 0.5;
-        if (tip.category === 'Security') return Math.random() > 0.7;
+      const filteredTips = OptimizationTips.filter(tip => {
+        if (tip.category === 'Meta Tags' && Metrics.metaDescriptionLength < 120) return true;
+        if (tip.category === 'Performance' && Metrics.pageSpeed > 3) return true;
+        if (tip.category === 'Links' && Metrics.brokenLinks > 0) return true;
+        if (tip.category === 'Mobile' && Metrics.mobileCompatibility < 90) return true;
+        if (tip.category === 'Structure' && Metrics.h1Count !== 1) return true;
+        if (tip.category === 'Technical' && Metrics.seo < 60) return true;
+        if (tip.category === 'Security' && Metrics.security < 50) return true;
         return false;
       });
       
       setOptimizationTips(filteredTips);
       toast.success('Analysis complete!');
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Analysis error:', error);
       setMetrics({ ...initialMetrics, status: 'error' });
       toast.error('Failed to analyze website. Please try again.');
-    } finally {
+    } 
+    finally {
       setIsAnalyzing(false);
     }
   };
